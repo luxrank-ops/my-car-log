@@ -5,8 +5,9 @@
 
 ## 바로 쓰기 (홈 화면에 추가)
 
-1. 폰 브라우저에서 아래 주소를 엽니다.
-   - **https://luxrank-ops.github.io/my-car-log/**
+**배포 주소: https://luxrank-ops.github.io/my-car-log/**  ·  저장소: https://github.com/luxrank-ops/my-car-log
+
+1. 폰 브라우저에서 위 주소를 엽니다.
 2. Chrome(안드로이드): 오른쪽 위 ⋮ → **홈 화면에 추가**
    Safari(iOS): 공유 → **홈 화면에 추가**
 3. 이후에는 아이콘을 누르면 주소창 없이 앱처럼 열립니다.
@@ -59,7 +60,7 @@ tests/serve.py        로컬 정적 서버
 
 ## 검증 결과
 
-`python3 tests/e2e.py` — Chromium(390×844, Asia/Seoul)에서 74/74 통과:
+`python3 tests/e2e.py` — Chromium(390×844, Asia/Seoul)에서 74/74 통과, `python3 tests/live_check.py` — 배포 URL에서 31/31 통과:
 
 - 시드: 차량 3대·주유 8건(471,192원)·정비 4항목(421,344원)
 - 연비: 평균 12.39km/L, 일평균 31.9km, 다음 주유 2026-12-01 예측

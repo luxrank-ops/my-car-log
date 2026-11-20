@@ -1,0 +1,25 @@
+{
+  "name": "내 차 AI 차계부",
+  "short_name": "AI 차계부",
+  "description": "3대의 주유·정비·소모품을 스스로 관리하는 로컬 AI 차계부. 폰 안에만 저장하고 오프라인에서도 동작합니다.",
+  "lang": "ko-KR",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "/my-car-log/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#eef1f7",
+  "theme_color": "#12203a",
+  "categories": ["productivity", "utilities", "lifestyle"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "AI 빠른 입력", "short_name": "빠른 입력", "url": "./index.html#quick" },
+    { "name": "주유 기록", "short_name": "주유", "url": "./index.html#fuel" }
+  ]
+}

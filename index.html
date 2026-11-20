@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#12203a">
+<meta name="description" content="내 차 3대를 스스로 관리하는 AI 차계부 — 주유·정비·소모품·설명서까지 폰 안에서.">
+<title>내 차 AI 차계부</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AI 차계부">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+
+<div id="boot" class="boot">
+  <div class="boot-mark">🚗</div>
+  <div class="boot-text">차계부를 불러오는 중…</div>
+</div>
+
+<div id="app" hidden>
+  <header class="topbar">
+    <div class="topbar-row">
+      <div class="brand">
+        <span class="brand-mark">🚗</span>
+        <div>
+          <div class="brand-title">내 차 AI 차계부</div>
+          <div class="brand-sub" id="todayLabel"></div>
+        </div>
+      </div>
+      <button class="icon-btn" id="btnQuickTop" title="AI 빠른 입력">🤖</button>
+    </div>
+    <nav class="veh-tabs" id="vehTabs" aria-label="차량 선택"></nav>
+  </header>
+
+  <main id="main">
+    <!-- 홈 -->
+    <section class="view" id="view-home" hidden>
+      <div id="briefingCard"></div>
+      <div class="stat-grid" id="homeStats"></div>
+      <div class="card" id="dueCard"></div>
+      <div class="card" id="recentCard"></div>
+    </section>
+
+    <!-- 주유 -->
+    <section class="view" id="view-fuel" hidden>
+      <div id="quickBoxFuel"></div>
+      <div class="card tight" id="fuelSummary"></div>
+      <div class="list" id="fuelList"></div>
+    </section>
+
+    <!-- 정비 -->
+    <section class="view" id="view-maint" hidden>
+      <div class="card tight" id="consumableBox"></div>
+      <div class="section-head">
+        <h2>정비 기록</h2>
+        <button class="btn small" id="btnAddMaint">＋ 정비 추가</button>
+      </div>
+      <div class="list" id="maintList"></div>
+    </section>
+
+    <!-- 설명서 + AI 비서 -->
+    <section class="view" id="view-manual" hidden>
+      <div class="card assistant" id="assistantCard">
+        <div class="assistant-head">
+          <span class="ai-dot"></span>
+          <div>
+            <div class="assistant-title">내 차 데이터 + 설명서 AI 비서</div>
+            <div class="assistant-sub">주행거리·정비·연비 기록과 취급설명서를 함께 읽고 답합니다</div>
+          </div>
+        </div>
+        <div class="chat-log" id="chatLog"></div>
+        <div class="chat-suggest" id="chatSuggest"></div>
+        <form class="chat-form" id="chatForm">
+          <input type="text" id="chatInput" autocomplete="off" placeholder="예) 브레이크 소음 나는데 보증 남았어?">
+          <button class="btn primary" type="submit">질문</button>
+        </form>
+      </div>
+
+      <div class="search-wrap">
+        <input type="search" id="manualSearch" placeholder="🔎 설명서 검색 — 공기압, 엔진오일, 4H, 퓨즈, 견인…" autocomplete="off">
+        <div class="chips" id="manualCatChips"></div>
+      </div>
+      <div class="search-meta" id="searchMeta"></div>
+      <div class="list" id="manualList"></div>
+    </section>
+
+    <!-- 설정 -->
+    <section class="view" id="view-settings" hidden>
+      <div class="card">
+        <h2>내보내기</h2>
+        <p class="muted">엑셀(.xlsx) 4개 시트와 JSON 전체 백업을 폰에서 바로 만듭니다.</p>
+        <div class="btn-row">
+          <button class="btn primary" id="btnExportXlsx" data-act="export-xlsx">📊 엑셀 내보내기</button>
+          <button class="btn" id="btnExportJson" data-act="export-json">💾 JSON 백업</button>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="btnImportJson" data-act="import-json">📥 JSON 복원</button>
+          <input type="file" id="fileImport" accept="application/json,.json" hidden>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>AI 설정</h2>
+        <p class="muted">문자·메모 자동 파서와 진단·예측은 API 키 없이 100% 오프라인으로 동작합니다. Gemini 키를 넣으면 영수증 사진 읽기와 심층 답변이 켜집니다.</p>
+        <label class="field">
+          <span>Gemini API 키 (선택)</span>
+          <input type="password" id="geminiKey" placeholder="AIza… (이 폰에만 저장)" autocomplete="off">
+        </label>
+        <div class="field-inline">
+          <label class="field">
+            <span>모델</span>
+            <input type="text" id="geminiModel" placeholder="gemini-2.5-flash">
+          </label>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="btnSaveKey" data-act="save-key">키 저장</button>
+          <button class="btn ghost" id="btnClearKey" data-act="clear-key">키 삭제</button>
+        </div>
+        <div class="hint" id="keyState"></div>
+      </div>
+
+      <div class="card">
+        <h2>차량 관리</h2>
+        <div id="vehicleAdmin"></div>
+        <div class="btn-row"><button class="btn" id="btnAddVehicle" data-act="add-vehicle">＋ 차량 추가</button></div>
+      </div>
+
+      <div class="card">
+        <h2>데이터</h2>
+        <div class="kv" id="storageState"></div>
+        <div class="btn-row">
+          <button class="btn danger ghost" id="btnReset" data-act="reset">기록 초기화(기본 데이터로)</button>
+        </div>
+        <p class="tiny muted">기록은 이 폰의 브라우저(IndexedDB)에만 저장됩니다. 서버로 보내지 않습니다.</p>
+      </div>
+
+      <div class="card">
+        <h2>정보</h2>
+        <p class="tiny muted">
+          설명서 내용은 기아·쉐보레 공식 취급설명서와 공개 자료를 정리한 참고용입니다.
+          정비·안전 판단은 차량 라벨과 서비스센터 확인이 우선합니다.
+          각 항목에 원문 링크를 함께 표시했습니다.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar" id="tabbar">
+    <button data-tab="home" class="tab active"><span class="ti">🏠</span><span>홈</span></button>
+    <button data-tab="fuel" class="tab"><span class="ti">⛽</span><span>주유</span></button>
+    <button data-tab="maint" class="tab"><span class="ti">🔧</span><span>정비</span></button>
+    <button data-tab="manual" class="tab"><span class="ti">📖</span><span>AI·설명서</span></button>
+    <button data-tab="settings" class="tab"><span class="ti">⚙️</span><span>설정</span></button>
+  </nav>
+</div>
+
+<!-- ===== 모달 ===== -->
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-backdrop" data-close="1"></div>
+  <div class="sheet-panel" id="sheetPanel" role="dialog" aria-modal="true">
+    <div class="sheet-grab"></div>
+    <div class="sheet-head">
+      <h3 id="sheetTitle">제목</h3>
+      <button class="icon-btn" data-close="1" aria-label="닫기">✕</button>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+    <div class="sheet-foot" id="sheetFoot"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="vendor/xlsx.full.min.js"></script>
+<script src="js/core.js"></script>
+<script src="js/seed.js"></script>
+<script src="js/manuals.js"></script>
+<script src="js/db.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/xlsx-export.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -474,7 +474,7 @@
   function renderSettings() {
     const s = DB.settings();
     $('#geminiKey').value = s.geminiKey || '';
-    $('#geminiModel').value = s.geminiModel || 'gemini-2.5-flash';
+    $('#geminiModel').value = s.geminiModel || 'gemini-3.1-flash-lite';
     $('#keyState').innerHTML = s.geminiKey
       ? '<span class="pill g">키 저장됨 · 이 폰에만 보관</span> 영수증 사진 OCR과 심층 답변이 켜졌습니다.'
       : '<span class="pill">키 없음</span> 문자·메모 파서, 진단·예측, 매뉴얼 검색은 키 없이 모두 동작합니다.';
@@ -519,7 +519,7 @@
 
   function saveKey() {
     const k = $('#geminiKey').value.trim();
-    const m = $('#geminiModel').value.trim() || 'gemini-2.5-flash';
+    const m = $('#geminiModel').value.trim() || 'gemini-3.1-flash-lite';
     DB.setSetting('geminiKey', k);
     DB.setSetting('geminiModel', m);
     renderSettings();

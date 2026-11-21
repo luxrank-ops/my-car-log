@@ -582,7 +582,7 @@
 
   /* ---------- Gemini (선택) ---------- */
   function geminiKey() { const s = N().settings(); return (s.geminiKey || '').trim(); }
-  function geminiModel() { const s = N().settings(); return (s.geminiModel || 'gemini-2.5-flash').trim(); }
+  function geminiModel() { const s = N().settings(); return (s.geminiModel || 'gemini-3.1-flash-lite').trim(); }
 
   function vehContext(vehicleId) {
     const db = N();

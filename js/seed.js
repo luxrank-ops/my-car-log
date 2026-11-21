@@ -231,7 +231,7 @@
       maintLogs: MAINT_LOGS,
       schedules: SCHEDULES,
       reminders: REMINDERS,
-      settings: { activeVehicle: 'ray', geminiKey: '', geminiModel: 'gemini-2.5-flash' }
+      settings: { activeVehicle: 'ray', geminiKey: '', geminiModel: 'gemini-3.1-flash-lite' }
     }));
   }
 
